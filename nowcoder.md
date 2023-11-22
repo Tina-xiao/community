@@ -190,7 +190,7 @@ request是代表HTTP请求信息的对象，response是代表HTTP响应信息的
 
 下图的action是数据提交的路径,一定要加 / ，不加就是相对地址，会另当前的地址+相对地址，从而找不到报错。
 
-![](F:\typora\workspace\nowcoderCommunity\assets\image-20231112151308396.png)
+![](assets\image-20231112151308396.png)
 
 ```java
     @RequestMapping(path = "/student",method = RequestMethod.POST)
@@ -366,7 +366,7 @@ public List<Map<String, Object>> getEmps(){
 
 ## 1.5  MyBatis入门
 
-![image-20231113164511235](F:\typora\workspace\nowcoderCommunity\assets\image-20231113164511235.png)
+![image-20231113164511235](assets\image-20231113164511235.png)
 
 只需要写DAO接口，不需要写实现类，底层自动实现，前提是把所依赖的sql写好。
 
@@ -406,7 +406,7 @@ logging.level.com.nju.community=debug
 
 ​	**classpath**，顾名思义，就是指 .class 文件所在的路径。.class 文件由 .java 文件编译后产生，我们用 java 命令执行.class 文件时，需要指定 jvm 去哪搜索目标 class 文件，而指定去哪搜索就是 classpath 的含义，即：**`classpath`是JVM用到的一个环境变量，它用来指示JVM如何搜索`class`。**
 
-![image-20231113171526492](F:\typora\workspace\nowcoderCommunity\assets\image-20231113171526492.png)
+![image-20231113171526492](assets\image-20231113171526492.png)
 
 项目编译之后，classes所在位置就是classpath。
 
@@ -418,7 +418,7 @@ logging.level.com.nju.community=debug
 
 + 实体类建立和表的映射。
 
-![image-20231113185209657](F:\typora\workspace\nowcoderCommunity\assets\image-20231113185209657.png)
+![image-20231113185209657](assets\image-20231113185209657.png)
 
 + 书写mapper接口
 
@@ -435,7 +435,7 @@ public interface DiscussPostMapper {
 }
 ```
 
-![image-20231113185917514](F:\typora\workspace\nowcoderCommunity\assets\image-20231113185917514.png)
+![image-20231113185917514](assets\image-20231113185917514.png)
 
 + 配置相应的xml文件
 
@@ -793,21 +793,21 @@ logging.file.name= D:/JetBrains/IntelliJ IDEA 2022.1.4/workspace/community/logge
 
 ##### 1.8.1git原理
 
-![image-20231122172200796](F:\typora\workspace\nowcoderCommunity\assets\image-20231122172200796.png)
+![image-20231122172200796](assets\image-20231122172200796.png)
 
-![image-20231122173437956](F:\typora\workspace\nowcoderCommunity\assets\image-20231122173437956.png)
+![image-20231122173437956](assets\image-20231122173437956.png)
 
-![image-20231122173531364](F:\typora\workspace\nowcoderCommunity\assets\image-20231122173531364.png)
+![image-20231122173531364](assets\image-20231122173531364.png)
 
-![image-20231122173642006](F:\typora\workspace\nowcoderCommunity\assets\image-20231122173642006.png)
+![image-20231122173642006](assets\image-20231122173642006.png)
 
 git add . 其中.代表把所有添加进去，也可以用*替代
 
-![image-20231122173714274](F:\typora\workspace\nowcoderCommunity\assets\image-20231122173714274.png)
+![image-20231122173714274](assets\image-20231122173714274.png)
 
 ##### 1.8.2 git项目搭建
 
-![image-20231122174007417](F:\typora\workspace\nowcoderCommunity\assets\image-20231122174007417.png)
+![image-20231122174007417](assets\image-20231122174007417.png)
 
 git bash here-> git init 创建本地仓库 或者 git clone [url] http://...克隆远程仓库
 
@@ -815,9 +815,9 @@ git bash here-> git init 创建本地仓库 或者 git clone [url] http://...克
 
 文件四种状态
 
-![image-20231122174539428](F:\typora\workspace\nowcoderCommunity\assets\image-20231122174539428.png)
+![image-20231122174539428](assets\image-20231122174539428.png)
 
-![image-20231122174901100](F:\typora\workspace\nowcoderCommunity\assets\image-20231122174901100.png)
+![image-20231122174901100](assets\image-20231122174901100.png)
 
 
 
@@ -862,7 +862,7 @@ tem/
 *rebel.xml*
 ```
 
-![image-20231122175135085](F:\typora\workspace\nowcoderCommunity\assets\image-20231122175135085.png)
+![image-20231122175135085](assets\image-20231122175135085.png)
 
 ##### 1.8.4 github设置
 
@@ -878,11 +878,11 @@ ssh -keygen -t -rsa
 
 如下生成一个公钥一个私钥。
 
-![image-20231122191538101](F:\typora\workspace\nowcoderCommunity\assets\image-20231122191538101.png)
+![image-20231122191538101](assets\image-20231122191538101.png)
 
 将public key添加到github账户，将github账户与本机绑定。
 
-![image-20231122192011889](F:\typora\workspace\nowcoderCommunity\assets\image-20231122192011889.png)
+![image-20231122192011889](assets\image-20231122192011889.png)
 
 使用github创建仓库，克隆到本地。
 
@@ -909,7 +909,7 @@ url = git@gitee.com:Name/project.git
 
 1. 新建项目，绑定git
 
-   绑定方法1：将clone到本地的所有文件移动到当前项目下，自动绑定git![image-20231122194701109](F:\typora\workspace\nowcoderCommunity\assets\image-20231122194701109.png)
+   绑定方法1：将clone到本地的所有文件移动到当前项目下，自动绑定git![image-20231122194701109](assets\image-20231122194701109.png)
 
    绑定方法2：
 
@@ -1013,7 +1013,7 @@ dev 开发用
 
 后面括号的蓝色字是当前分支
 
-![image-20231122201947310](F:\typora\workspace\nowcoderCommunity\assets\image-20231122201947310.png)
+![image-20231122201947310](assets\image-20231122201947310.png)
 
 ```bash
 #列出所有分支
@@ -1057,9 +1057,9 @@ git push origin localbranchname:remotebranchname
 
 多个分支并行执行，不冲突，同时存在多个版本
 
-![image-20231122203149104](F:\typora\workspace\nowcoderCommunity\assets\image-20231122203149104.png)
+![image-20231122203149104](assets\image-20231122203149104.png)
 
-![image-20231122203455625](F:\typora\workspace\nowcoderCommunity\assets\image-20231122203455625.png)
+![image-20231122203455625](assets\image-20231122203455625.png)
 
 问题:This branch is 1 commit ahead, 1 commit behind main.
 
@@ -1076,19 +1076,13 @@ git push origin localbranchname:remotebranchname
 5.提交本地代码 git commit -m"描述"
 6.提交到远程库 git push origin master
 
-##### 1.8.6 git回滚
-
-
-
-
-
-![image-20231115163332129](F:\typora\workspace\nowcoderCommunity\assets\image-20231115163332129.png)
+![image-20231115163332129](assets\image-20231115163332129.png)
 
 # 第二章 开发社区登录模块
 
 ## 2.1 发送邮件
 
-![image-20231115163737937](F:\typora\workspace\nowcoderCommunity\assets\image-20231115163737937.png)
+![image-20231115163737937](assets\image-20231115163737937.png)
 
 ##### 切屏快捷键
 
@@ -1234,8 +1228,8 @@ public class MailClient {
 3.Thymeleaf 提供spring标准方言和一个与 SpringMVC 完美集成的可选模块，可以快速的实现表单绑定、属性编辑器、国际化等功能。
 
 ##### 常用th标签都有那些？
-![image-20231121234716940](F:\typora\workspace\nowcoderCommunity\assets\image-20231121234716940.png)
-![image-20231121234735513](F:\typora\workspace\nowcoderCommunity\assets\image-20231121234735513.png)
+![image-20231121234716940](assets\image-20231121234716940.png)
+![image-20231121234735513](assets\image-20231121234735513.png)
 
 ##### 数据访问模式
 
@@ -1670,4 +1664,61 @@ model.addAttribute("target","/index");
        }
    ```
 
+   ### 2.3 激活注册账号
+   
+   点击邮件中的链接，访问服务端的激活服务；
+   激活的时候可能会出现三种状态：激活成功、激活失败、重复激活，可以把这三种状态写在一个接口中做一个常量声明，方变复用。谁用谁implements。
+   
+   ```java
+   public interface PycommunityConstant {
+       //激活成功
+       int ACTIVATION_SUCCESS = 0;
+       //重复激活
+       int ACTIVATION_REPEAT = 1;
+       //激活失败
+       int ACTIVATION_FAILURE = 2;
+   }
+   ```
+   
+   编写service层代码
+   
+   ```java
+   public int activation(int userId, String code) {
+           User user = userMapper.selectById(userId);
+           if(user.getStatus() == 1) {
+               return ACTIVATION_REPEAT;
+           }else if(!user.getActivationCode().equals(code)) {
+               return ACTIVATION_FAILURE;
+           }else {
+               userMapper.updateStatus(userId,1);
+               return ACTIVATION_SUCCESS;
+           }
+       }
+   
+   ```
+   
+   编写controller层代码
+   
+   ```java
+    @RequestMapping(path = "/activation/{userId}/{code}",method = RequestMethod.GET)
+       public String activation(Model model,
+                                @PathVariable("userId") int id,
+                                @PathVariable("code") String code) {
+           int result = userService.activation(id, code);
+           if(result == ACTIVATION_SUCCESS) {
+               model.addAttribute("msg","激活成功，可以正常使用了");
+               model.addAttribute("target","/login");
+           }else if(result == ACTIVATION_REPEAT) {
+               model.addAttribute("msg","重复激活！");
+               model.addAttribute("target","/index");
+           }else {
+               model.addAttribute("msg","激活失败，提供的激活码不正确");
+               model.addAttribute("target","/index");
+           }
+           return "/site/operate-result";
+       }
+   ```
+   
+   
+   
    

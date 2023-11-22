@@ -811,8 +811,6 @@ git add . 其中.代表把所有添加进去，也可以用*替代
 
 git bash here-> git init 创建本地仓库 或者 git clone [url] http://...克隆远程仓库
 
- 关联远程仓库： ***git remote add origin 复制的仓库地址\***
-
 ##### 1.8.3 git 文件操作
 
 文件四种状态
@@ -821,7 +819,9 @@ git bash here-> git init 创建本地仓库 或者 git clone [url] http://...克
 
 ![image-20231122174901100](F:\typora\workspace\nowcoderCommunity\assets\image-20231122174901100.png)
 
-忽略文件
+
+
+###### 忽略文件
 
 ```.gitignore
 *.class
@@ -861,8 +861,6 @@ tem/
 #rebel
 *rebel.xml*
 ```
-
-
 
 ![image-20231122175135085](F:\typora\workspace\nowcoderCommunity\assets\image-20231122175135085.png)
 
@@ -915,21 +913,97 @@ url = git@gitee.com:Name/project.git
 
    绑定方法2：
 
-2. 提交
+   ```bash
+   # 关联远程仓库
+   git remote add origin [ssh]复制的仓库地址
+   ```
 
- **git push <远程主机名> <本地分支名> <远程分支名>** 
+2. 加入暂存区
 
-**git push origin master :[refs](https://so.csdn.net/so/search?q=refs&spm=1001.2101.3001.7020)/for/master**
+   ```bash
+   #给代码某个版本打标签,方便查找
+   git tag v1.0.0
+   
+   #新建仓库
+   git init
+   git init [本地仓库名]
+   
+   #加入暂存区,这里的*是指把所有changes加入暂存区，而不是项目的所有文件
+   git add .
+   git add [file]
+   
+   #删除工作区文件，并将这次删除放入暂存区
+   git  rm [file1] [file2]
+   
+   #停止追踪指定文件，但该文件保留在工作区
+   git rm --cached [file]
+   
+   #改名文件，并将改名放入暂存区
+   git mv [file-original] [file-renamed]
+   ```
 
-即是将本地的master分支推送到远程主机origin上的对应master分支。origin 是远程主机名，第一个master是本地分支名，第二个master是远程分支名。
+   
 
-**git push origin master**
+3. 提交
 
-如果远程分支被省略，则表示将本地分支推送到与之存在追踪关系的远程分支（通常两者同名），如果该远程分支不存在，则会被新建
+```bash
+#提交暂存区到仓库区,一定要加-m，否则会弹出vim
+git commit -m "提交信息"
 
-**git push**
+#提交指定文件到仓库区
+git commit [file1] [file2] ... -m "提交信息"
 
-如果当前分支只有一个远程分支，那么主机名都可以省略，形如 git push，可以使用git branch -r ，查看远程的分支名
+#提交工作区自上次commit之后的变化，直接到仓库区
+git commit -a
+
+#提交时显示所有differ信息
+git commit -v
+```
+
+4. push到远程仓库
+
+   ```bash
+   #查看本地仓库所对应的远程仓库别名和地址
+   git remote -v
+   
+   #把本地仓库的main分支推送给远程仓库的main分支，如果相同，可以写一个
+   git push -u origin master
+   git push -u origin master main:main
+   git push -u origin master main
+   
+   git push <远程仓库别名> <本地分支名>:<远程分支名>
+   git pull <远程仓库别名> <远程分支名>:<本地分支名>
+   #即是将本地的master分支推送到远程仓库origin上的对应master分支。origin 是远程仓库别名（默认都是这个），第一个master是本地分支名，第二个master是远程分支名。
+   git push origin master:master
+   git pull origin master:master
+   
+   #如果远程分支被省略，则表示将本地分支推送到与之存在追踪关系的远程分支（通常两者同名），如果该远程分支不存在，则会被新建
+   git push origin master（常用！）
+   
+   #如果当前分支只有一个远程分支，那么主机名都可以省略，形如 git push，可以使用git branch -r ，查看远程的分支名
+   git push
+   
+   #链接远程分支
+   git remote add origin [ssh]git@github.com:你的github用户名/你的github仓库名.git
+   
+   ```
+
+5. 回退
+
+   ```bash
+   #查看提交记录
+   git log
+   
+   #查看简洁提交记录，只有id和名字
+   git log --online
+   
+   #回退到某一版本，保存工作区和暂存区内容
+   git reset --soft id
+   #丢弃工作区和暂存区内容
+   git reset --hard id
+   #只保留工作区内容，为默认参数
+   git reset --mixed id
+   ```
 
 ##### 1.8.6 git分支
 
@@ -952,23 +1026,33 @@ git branch -r
 git branch [branch-name]
 
 #新建一个本地分支，并切换到该分支
-git checkout -b [branch-]
+git checkout -b [branch-name]
 
 #切换到这个分支
+git switch [branch-name]
 git checkout [branch-name]
 
 #本地与远程分支同步 ,origin代表远程主机
 git pull origin [branch-name]
 
-#合并指定分支到当前分支
+#合并指定分支branch到当前分支
 git merge [branch]
 
 #删除分支
 git branch -d [branch-name]
 
+#只有当该分支的修改已经合并到其他分支时，才能被安全地删除。如果分支的修改尚未合并，可以使用强制删除的命令：
+git branch -D [branch-name]
+
 #删除远程分支
 git push origin --delete [branch-name]
 git branch -dr [remote/branch]
+
+#远程分支拉到本地，localbranchname是本地分支的名称，origin是远程仓库的名称，remotebranchname是远程分支的名称。
+git checkout -b localbranchname origin/remotebranchname
+
+#将本地分支推送到远程仓库
+git push origin localbranchname:remotebranchname
 ```
 
 多个分支并行执行，不冲突，同时存在多个版本
@@ -977,12 +1061,26 @@ git branch -dr [remote/branch]
 
 ![image-20231122203455625](F:\typora\workspace\nowcoderCommunity\assets\image-20231122203455625.png)
 
-问题分析:This branch is 1 commit ahead, 1 commit behind main.
+问题:This branch is 1 commit ahead, 1 commit behind main.
 
-+ + 你本地commit了代码，没有push，就是超前。
-    remote上有更新，本地没有pull，就是落后。
++ 你本地commit了代码，没有push，就是超前。
+  remote上有更新，本地没有pull，就是落后。
 
-[Git远程仓库使用_git连接远程仓库-CSDN博客](https://blog.csdn.net/qq_42108331/article/details/131276246)
+问题：git fatal: destination path ‘/test’ already exists and is not an empty directory.解决
+把本地文件上传到GitHub上时，出现git fatal: destination path ‘/test’ already exists and is not an empty directory错误。网上说的需要删除本地文件.git,或者删除本地文件夹。
+其实只需要
+1.进入文件目录
+2.初始化 git init
+3.添加远程仓库地址 git remote add origin (address)
+4.添加本地代码 git add 项目名
+5.提交本地代码 git commit -m"描述"
+6.提交到远程库 git push origin master
+
+##### 1.8.6 git回滚
+
+
+
+
 
 ![image-20231115163332129](F:\typora\workspace\nowcoderCommunity\assets\image-20231115163332129.png)
 

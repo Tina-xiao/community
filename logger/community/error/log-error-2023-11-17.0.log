@@ -1,0 +1,2 @@
+2023-11-17 00:50:46,395 ERROR [main] c.n.c.u.MailClient [MailClient.java:37] 发送邮件失败:Local address contains illegal character
+2023-11-17 00:54:19,794 ERROR [main] c.n.c.u.MailClient [MailClient.java:37] 发送邮件失败:Local address contains illegal character

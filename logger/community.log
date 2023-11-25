@@ -1,0 +1,14 @@
+2023-11-15T13:29:53.249+08:00  INFO 10808 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-11-15T13:29:53.250+08:00  INFO 10808 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-11-15T13:29:53.251+08:00  INFO 10808 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.15]
+2023-11-15T13:29:53.294+08:00  INFO 10808 --- [restartedMain] o.a.c.c.C.[.[localhost].[/community]     : Initializing Spring embedded WebApplicationContext
+2023-11-15T13:29:53.295+08:00  INFO 10808 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 304 ms
+2023-11-15T13:29:53.426+08:00  INFO 10808 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2023-11-15T13:29:53.476+08:00  INFO 10808 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-11-15T13:29:53.492+08:00  INFO 10808 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path '/community'
+2023-11-15T13:29:53.499+08:00  INFO 10808 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2023-11-15T13:29:58.027+08:00  INFO 8208 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2023-11-15T13:29:59.974+08:00  WARN 8208 --- [main] com.nju.community.LoggerTests            : warn log
+2023-11-15T13:29:59.974+08:00 ERROR 8208 --- [main] com.nju.community.LoggerTests            : error log
+2023-11-15T14:09:33.776+08:00  INFO 10808 --- [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 2 class path changes (1 addition, 0 deletions, 1 modification)
+2023-11-15T14:09:33.813+08:00  INFO 10808 --- [Thread-51] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]

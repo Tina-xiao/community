@@ -87,7 +87,6 @@
 								   th:value="${user!=null?user.password:''}"
 								   placeholder="请输入您的密码!" required>
 							<div class="invalid-feedback" th:text="${passwordMsg}">
-
 								密码长度不能小于8位!
 							</div>							
 						</div>
@@ -95,7 +94,7 @@
 					<div class="form-group row mt-4">
 						<label for="confirm-password" class="col-sm-2 col-form-label text-right">确认密码:</label>
 						<div class="col-sm-10">
-							<input name="password"
+							<input
 								   th:value="${user!=null?user.password:''}"
 								   type="password"
 								   class="form-control" id="confirm-password" placeholder="请再次输入密码!" required>
@@ -190,7 +189,7 @@
 		</footer>
 	</div>
 
-	<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
 	<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
 	<script th:src="@{/js/global.js}"></script>

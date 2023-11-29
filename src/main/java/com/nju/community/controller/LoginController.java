@@ -5,13 +5,17 @@ import com.google.code.kaptcha.Producer;
 import com.nju.community.entity.User;
 import com.nju.community.service.UserService;
 import com.nju.community.util.CommunityConstant;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +38,9 @@ public class LoginController implements CommunityConstant {
 
     @Autowired
     private Producer kaptchaProducer;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     //访问注册页面
     @RequestMapping(value = "/register",method = RequestMethod.GET)
@@ -103,7 +110,41 @@ public class LoginController implements CommunityConstant {
             logger.error("响应验证码失败:"+ e.getMessage());
         }
 
+    }
+
+    //可以路径是一样的，但是需要方法类型不同
+    //如果参数不是普通参数，而是user等实体类，springmvc就会把参数装在model里，页面就可以通过model获取,即${}，model把参数返回给页面
+    //model里的参数可以直接${名称}调用，但是参数里的需要加param前缀，即${param.参数}
+    //普通参数要获取要么主动获取，要么加入到手动model
+    @RequestMapping(path = "/login",method = RequestMethod.POST)
+    //code验证码,ticket用cookie保存，用httpservlert
+    public String login(String username, String password, String code,boolean rememberme,
+                        Model model,HttpSession session,HttpServletResponse response){
+        String kaptcha = (String) session.getAttribute("kaptcha");
+        //检查验证码，业务层未包括这个功能，不区分大小写
+        if(StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code) || !kaptcha.equalsIgnoreCase(code)){
+            model.addAttribute("codeMsg","验证码不正确！");
+            return "/site/login";
+        }
+        //检查账号密码
+        int expiredSeconds = rememberme ? REMEMBER_EXPIRED_SECONDS : DEFAULT_EXPIRED_SECONDS;
+        Map<String,Object> map = userService.login(username,password,expiredSeconds);
+        //如果map里包含ticket就是登陆成功,成功时生成登录凭证发给客户端
+        if(map.containsKey("ticket")){
+            Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
+            cookie.setPath(contextPath);
+            cookie.setMaxAge(expiredSeconds);
+            response.addCookie(cookie);
+            return "redirect:/index";
+        }
+        else{
+            model.addAttribute("usernameMsg",map.get("usernameMsg"));
+            model.addAttribute("passwordMsg",map.get("passwordMsg"));
+            return "/site/login";
+        }
 
     }
+
+
 
 }

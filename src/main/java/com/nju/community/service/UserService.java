@@ -1,6 +1,8 @@
 package com.nju.community.service;
 
+import com.nju.community.dao.LoginTicketMapper;
 import com.nju.community.dao.UserMapper;
+import com.nju.community.entity.LoginTicket;
 import com.nju.community.entity.User;
 import com.nju.community.util.CommunityConstant;
 import com.nju.community.util.CommunityUtil;
@@ -19,6 +21,9 @@ import java.util.Random;
 
 @Service
 public class UserService implements CommunityConstant {
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -67,8 +72,10 @@ public class UserService implements CommunityConstant {
             return map;
         }
         //注册用户
-        user.setSalt(CommunityUtil.generateUUID().substring(0,5));
+        user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
+//        System.out.println("用户设置的密码"+user.getPassword());
         user.setPassword(CommunityUtil.md5(user.getPassword()+user.getSalt()));
+//        System.out.println("加密后的密码"+user.getPassword());
         user.setStatus(0);//未激活
         user.setType(0);//普通用户
         user.setActivationCode(CommunityUtil.generateUUID());//激活码
@@ -107,6 +114,54 @@ public class UserService implements CommunityConstant {
         else
             return ACTIVATION_FAILURE;
 
+    }
+
+    //过期时间expiredSeconds
+    public Map<String,Object> login(String username, String password, int expiredSeconds){
+        Map<String,Object>  map = new HashMap<>();
+
+        //判断控制
+        if(StringUtils.isBlank(username)){
+            map.put("usernameMsg","消息不能为空");
+            return map;
+        }
+        if(StringUtils.isBlank(password)){
+            map.put("passwordMsg","密码不能为空");
+            return  map;
+        }
+        //验证账号
+        User user = userMapper.selectByName(username);
+        if(user==null){
+            map.put("usernameMsg","该账号不存在");
+            return map;
+        }
+        //验证状态
+        if(user.getStatus()==0){
+            map.put("usernameMsg","账号未激活");
+            return map;
+        }
+
+
+        // 验证密码
+        password = CommunityUtil.md5(password+user.getSalt());
+        if (!user.getPassword().equals(password)) {
+//            System.out.println("获取的密码加密后"+password);
+//            System.out.println("仓库密码"+user.getPassword());
+            map.put("passwordMsg", "密码不正确!");
+            return map;
+        }
+
+        //生成登录凭证
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(user.getId());
+        //随机生成一个凭证
+        loginTicket.setTicket(CommunityUtil.generateUUID());
+        loginTicket.setStatus(0);
+        //过期时间是当前时间往后推移expiredSecondss
+        loginTicket.setExpired(new Date(System.currentTimeMillis()+ expiredSeconds *1000));
+        loginTicketMapper.insertLoginTicket(loginTicket);
+         map.put("ticket",loginTicket.getTicket());
+        return map;
     }
 
 }

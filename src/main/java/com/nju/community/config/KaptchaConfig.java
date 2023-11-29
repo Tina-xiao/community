@@ -21,7 +21,8 @@ public class KaptchaConfig {
         //字的颜色
         properties.setProperty("kaptcha.textproducer.font.color","black");
         //字符范围
-        properties.setProperty("kaptcha.textproducer.char.string","0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM");
+//        properties.setProperty("kaptcha.textproducer.char.string","0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM");
+        properties.setProperty("kaptcha.textproducer.char.string","0123456789");
         //字符个数
         properties.setProperty("kaptcha.textproducer.char.length","4");
         properties.setProperty("kaptcha.noise.impl","com.google.code.kaptcha.impl.NoNoise");

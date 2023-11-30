@@ -171,4 +171,9 @@ public class UserService implements CommunityConstant {
 
     }
 
+    //通过凭证找到对应的登录记录
+    public LoginTicket findLoginticket(String ticket){
+        return loginTicketMapper.selectByTicket(ticket);
+    }
+
 }

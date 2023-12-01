@@ -153,6 +153,28 @@ request是代表HTTP请求信息的对象，response是代表HTTP响应信息的
 + 根据请求参数的名字获取该名字对应的**所有参数值组成的数组**，返回值是一个字符串数组，其中包含了这个参数名对应的所有参数
 + 如果获取的是一个不存在的参数，返回值为null
 
+### 数据请求类型
+
+当请求接口时，常见的数据请求类型有以下几种：
+
+GET请求：用于从服务器获取数据。GET请求将参数附加在URL中，以便将请求发送到服务器，并返回相应的数据。这是最常见的请求类型，适用于读取资源和查询数据。
+
+POST请求：用于向服务器提交数据。POST请求将参数包含在请求主体中，适合用于创建新资源、提交表单数据或执行某些操作。
+
+PUT请求：用于向服务器更新资源。PUT请求将更新的数据发送到特定URL，用于替换指定资源的全部内容。
+
+DELETE请求：用于从服务器删除资源。DELETE请求将删除指定URL上的资源。
+
+PATCH请求：用于对资源进行局部更新。PATCH请求类似于PUT请求，但只更新资源的一部分。
+
+OPTIONS请求：用于获取服务器支持的HTTP方法和资源的相关信息。OPTIONS请求可用于客户端与服务器之间的握手过程，了解服务器所支持的方法和功能。
+
+HEAD请求：类似于GET请求，但只返回响应头，不返回实体内容。HEAD请求通常用于获取资源的元信息，如文件大小、修改日期等。
+
+TRACE请求：用于回显服务器收到的请求。TRACE请求可用于测试和诊断，以检查请求在服务器端的处理情况。
+
+CONNECT请求：用于建立与代理服务器的隧道连接，通常用于进行安全的SSL/TLS加密通信。
+
 ##### GET请求
 
 1. 参数拼在?后
@@ -905,7 +927,7 @@ url = https://gitee.com/Name/project.git
 url = git@gitee.com:Name/project.git
 ```
 
-##### 1.8.5 IDEA集成git
+##### 1.8.5 git操作
 
 1. 新建项目，绑定git
 
@@ -1016,11 +1038,17 @@ dev 开发用
 ![image-20231122201947310](assets\image-20231122201947310.png)
 
 ```bash
-#列出所有分支
+#列出所有本地分支
 git branch
 
 #列出所有远程分支
 git branch -r
+
+#列出所有分支
+git branch -a
+
+#删除远程分支
+git push origin --delete [branch-name]
 
 #新建一个本地分支，但仍停留在当前分支,（分支名称必须和远程分支的名称相同）
 git branch [branch-name]
@@ -1032,7 +1060,7 @@ git checkout -b [branch-name]
 git switch [branch-name]
 git checkout [branch-name]
 
-#本地与远程分支同步 ,origin代表远程主机
+#本地与远程分支同步 ,origin代表远程主机，若没有同名远程分支自动创建远程分支
 git pull origin [branch-name]
 
 #合并指定分支branch到当前分支
@@ -1664,7 +1692,7 @@ model.addAttribute("target","/index");
        }
    ```
 
-   ### 2.3 激活注册账号
+   激活注册账号
    
    点击邮件中的链接，访问服务端的激活服务；
    激活的时候可能会出现三种状态：激活成功、激活失败、重复激活，可以把这三种状态写在一个接口中做一个常量声明，方变复用。谁用谁implements。
@@ -1721,4 +1749,273 @@ model.addAttribute("target","/index");
    
    
    
+## 2.3会话管理
+
+   ### 2.3.1会话管理
+
+http是简单的、可扩展的、无状态、有会话的。
+HTTP 是无状态的：在同一个连接中，两个执行成功的请求之间是没有关系的。这就带来了一个问题，用户没有办法在同一个网站中进行连续的交互，比如在一个电商网站里，用户把某个商品加入到购物车，切换一个页面后再次添加了商品，这两次添加商品的请求之间没有关联，浏览器无法知道用户最终选择了哪些商品。而使用 HTTP 的头部扩展，HTTP Cookies 就可以解决这个问题。把 Cookies 添加到头部中，创建一个会话让每次请求都能共享相同的上下文信息，达成相同的状态。
+注意，HTTP 本质是无状态的，使用 Cookies 可以创建有状态的会话。
+**Cookie**是服务器发送到用户浏览器并保存在浏览器本地的一小块数据，它会在浏览器下次向同一服务器再发起请求时被携带并发送到服务器上。通常，它用于告知服务端两个请求是否来自同一浏览器，如保持用户的登录状态。Cookie 使基于无状态的 HTTP 协议记录稳定的状态信息成为了可能。但是cookie存在两大致命缺陷：cookie数据保存至浏览器端，安全性不高；每次发送请求会携带cookie数据，长此以往发送的cookie数据越来越多，影响性能。
+![在这里插入图片描述](assets/b50c4a44ab0c430eba1e193cc43013be.png)
+
+cookie使用步骤：创建cookie、设置cookie生效范围，仅在生效路径及其子路径携带cookie、设置cookie生存时间，默认关闭浏览器cookie消失；
+
+```java
+ package com.nju.community.controller;
+
+import com.nju.community.util.CommunityUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+@RequestMapping("/cookie")
+public class CookieController {
+
+    //浏览器第一次访问服务器，服务器保存在浏览器端的cookie
+    @RequestMapping(value = "/set",method = RequestMethod.GET)
+    @ResponseBody
+    public String setCookie(HttpServletResponse response){
+        //创建cookie,一个cookie只能存一对key-value，且只能存字符串
+        Cookie cookie = new Cookie("code", CommunityUtil.generateUUID());
+        //设置cookie请求范围
+        cookie.setPath("/community/cookie");
+        //设置生存时间,默认关闭浏览器cookie消失
+        cookie.setMaxAge(60*10);
+        response.addCookie(cookie);
+        return "set cookie";
+    }
+
+    //浏览器下次访问该服务器时，自动携带该cookie,浏览器的检查可以看到cookie信息
+    @RequestMapping(path = "get",method = RequestMethod.GET)
+    @ResponseBody
+    //将key为code的cookie值赋给code
+    public String getCookie(@CookieValue("code") String code){
+         System.out.println(code);
+        return "get cookie";
+    }
+
+}
+```
+
+session使用步骤：由springmvc自动创建session；往session中存数据；
+
+![在这里插入图片描述](assets/d08787c196884fa1b57cb218ccb9b741.png)
+
+```java
+package com.nju.community.controller;
+
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.security.SecureRandom;
+
+@Controller
+@RequestMapping(path = "/session",method = RequestMethod.GET)
+public class SessionController {
+
+    //session示例
+    @RequestMapping(path = "/set",method = RequestMethod.GET)
+    @ResponseBody
+    //session不像cookie需要手动创建，Spring mvc自动注入，类似于model，什么数据都能存储
+    public String setSession(HttpSession session){
+        session.setAttribute("id",1);
+        session.setAttribute("name","Test");
+        return "set Session";
+    }
+
+    @RequestMapping(path = "/get",method = RequestMethod.GET)
+    @ResponseBody
+    public String getSession(HttpSession session){
+
+        System.out.println(session.getAttribute("id"));
+        System.out.println(session.getAttribute("name"));
+        return "get Session";
+    }
+}
+```
+
+**cookie vs session：**
+
+- **springmvc可以自动创建session并注入，cookie需要手动创建；**
+- **cookie只能存字符串，session可以存任何类型的数据；**
+- **cookie只能存少量数据，session可以存大量数据**
+
+## 2.4生成验证码
+
+用kaptcha在服务器端内存生成验证码图片
+生成验证码步骤：（1）导入jar包；
+
+```xml
+<dependency>
+    <groupId>com.github.penggle</groupId>
+    <artifactId>kaptcha</artifactId>
+    <version>2.3.2</version>
+</dependency>
+```
+
+（2）编写kaptcha配置类，进行相关配置，将该配置类加载到spring容器中，由spring容器对其进行初始化
+
+```java
+@Configuration
+public class KaptchaConfig {
+    @Bean
+    public Producer kaptchaProducer() {
+        //config依赖于一个properties对象
+        Properties properties = new Properties();
+        properties.setProperty("kaptcha.image.width","100");
+        properties.setProperty("kaptcha.image.height","40");
+        properties.setProperty("kaptcha.textproducer.font.size","32");
+        //字符颜色黑色
+        properties.setProperty("kaptcha.textproducer.font.color","0,0,0");
+        //随机字符的范围
+        properties.setProperty("kaptcha.textproducer.char.string","0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        //生成四个随机字符
+        properties.setProperty("kaptcha.textproducer.char.length","4");
+        //生成的图片的噪声类是nonoise即不加噪声
+        properties.setProperty("kaptcha.noise.impl","com.google.code.kaptcha.impl.NoNoise");
+        DefaultKaptcha kaptcha = new DefaultKaptcha();
+        //创建config对象，封装配置kaptcha的参数
+        Config config = new Config(properties);
+        kaptcha.setConfig(config);
+        return kaptcha;
+    }
+}
+```
+
+（3）生成随机字符，根据字符生成图片。在controller中编写相关内容，由于Producer kaptchaProducer由spring容器初始化，这里进行自动注入，验证码文本需要跨请求（进入登录页的请求和点击登录按钮登录的请求）使用，因此将生成的验证码文本保存在session中，方便后续登录使用
+
+```java
+private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+ 
+@Autowired
+private Producer kaptchaProducer;
+@RequestMapping(path = "/kaptcha", method = RequestMethod.GET)
+public void getKaptcha(HttpSession session, HttpServletResponse response) {
+   //生成验证码和图片
+   String text = kaptchaProducer.createText();
+   BufferedImage image = kaptchaProducer.createImage(text);
+   //将验证码存入session
+   session.setAttribute("kaptcha",text);
+   //把图片输出给浏览器
+   response.setContentType("image/png");
+   try {
+       ServletOutputStream outputStream = response.getOutputStream();
+       ImageIO.write(image,"png",outputStream);
+   } catch (IOException e) {
+       logger.error("响应验证码失败" + e.getMessage());
+   }
+}
+
+```
+
+（4）修改login.html中的相关内容，编写js代码，实现点击刷新验证码，验证码自动刷新。
+由于每个文件都引用了/js/global.js文件，为了减少硬编码， CONTEXT_PATH是定义在/js/global.js中的常量，为了使每次点击刷新验证码的路径变化，给路径加上随机参数p，p没有任何意义只是为了改变路径。
+
+```html
+	<script th:src="@{/js/global.js}"></script>
+<!--	//为了防止写死路径，配置到全局的global.js文件里-->
+	<script>
+		function refresh_kaptcha(){
+			var path = CONTEXT_PATH + "/kaptcha?p="+ Math.random();
+			//点击时刷新图片的src属性，重新获得一次验证码
+			document.getElementById("kaptcha").onclick = function() {
+				this.src = "/community/kaptcha?time=" + new Date().getTime();
+			}
+			//$("#kaptcha").attr("src",path);
+		}
+	</script>
+```
+
+## 2.5 开发登录、退出功能
+
+### 转发和重定向的区别
+
+转发：是指服务器接收到一个请求后，将请求转发给另一个资源进行处理，并将该资源的处理结果返回给客户端。在这个过程中，转发后的资源**对客户端是不可见的**，客户端只知道自己访问了一个资源，而不知道这个资源是被转发到的。
+
+重定向：是指服务器接收到一个请求后，发现该请求需要访问另一个资源才能得到响应，于是**告诉客户端重新发送一个请求**，访问另一个资源。在这个过程中，客户端会重新发送一个请求，访问另一个资源，因此客户端会知道自己访问了两个资源。
+
+转发：是通过**服务器内部的转发机制**实现的。当服务器接收到一个请求后，根据请求的URL地址找到对应的资源，然后将该请求转发给另一个资源进行处理，最终将该资源的处理结果返回给客户端。在这个过程中，客户端只知道自己访问了一个资源，而不知道这个资源是被转发到的。
+
+![img](assets/3ac79f3df8dcd100f453c7370e36a81bb8122f25.jpeg@f_auto)
+
+重定向：是通过HTTP响应头中的Location字段实现的。当服务器接收到一个请求后，发现该请求需要访问另一个资源才能得到响应，于是在HTTP响应头中设置Location字段，**告诉客户端重新发送一个请求**，访问另一个资源。当客户端收到这个响应后，会重新发送一个请求，访问另一个资源，因此客户端会知道自己访问了两个资源。
+
+![img](assets/6159252dd42a2834e7731648270826e117cebfe1.jpeg@f_auto)
+
+转发可以访问相对路径和绝对路径的资源，而重定向只能访问绝对路径的资源。因为转发是在服务器内部进行的，可以访问相对路径和绝对路径的资源。而重定向是在客户端进行的，只能访问绝对路径的资源。
+
+### 页面中各种标签中链接地址(href src action)的区别
+
+```html
+<a href="/demo/index.jsp">跳转到首页</a>
+<form action="/demo/test" method="post">
+    <input type="submit" value="submit">
+</form>
+<img src="http://www.baidu.com/1.jpg" />
+```
+
+1. href是a标签的链接，表示点击a标签需要跳转到哪里，是静态资源路径
+
+2. action是form表单的地址，表示表单需要提交到哪个地址(web路径)。
+
+3. src是用在其它标签内的地址，是指向物件的来源，表示拿取。
+
+1.   href与Action的区别
+
+
+href只能get参数，action能get参数又能post参数
+
+href一般用于单个连接，可以带参数（URL重写），是采用get方式请求的，在地址栏中可以看到所有的参数；
+
+action一样用于表单的提交（如：注册）等，他可以提交大量和比较复杂的参数，可通过post和get两种方式提交。如果选择post方式 则在地址栏中看不到提交的信息。
+**简单讲：单独连接到某个地址，用href;提交和注册信息，用action**
+
+### URL路径里面的*，**和？的使用详解
+
+注意：通配符不能包括分隔符"/"
+
+？：匹配一个字符
+
+```tex
+/admin?可以匹配/admin1，但是不能匹配/admin或/admin/
+```
+
+*：匹配0个或多个字符串 
+
+ ```tex
+   /admin* 可以匹配/admin，/admin123，但是不能匹配/admin/1
+   /test/* ，在test文件下一级目录，可以访问/test/a但就不允许访问/test/a/a
+ ```
+
+**：匹配0或多个路径
+
+  ```tex
+   /admin/** 将匹配/admin/a或者/admin/a/b
+   /test/** , 所有子目录都可以访问
+  ```
+
+### return "redirect:/index" 和 return "/index"区别
+
+ redirect:/index 后的"/index"是指的web访问路径，也就是RequestMapping中的path
+
+ return "/index" 后的"/index"是指的classthpath:index.html,是静态资源路径
+
+### 为什么访问图片要用图片的web路径，而不是使用静态资源路径去访问
+
+图片是保存在服务器上的，localhost那么本机就是服务器，如果别的电脑访问服务器想要读取图片，是不能知道服务器的静态资源访问路径的，且用户输入的资源路径也是别的电脑的，并非服务器的。
+
+
+
+
+
    

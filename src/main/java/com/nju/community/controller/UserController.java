@@ -1,6 +1,7 @@
 package com.nju.community.controller;
 
 
+import com.nju.community.annotation.LoginRequired;
 import com.nju.community.entity.User;
 import com.nju.community.service.UserService;
 import com.nju.community.util.CommunityUtil;
@@ -46,11 +47,13 @@ public class UserController {
     @Autowired
     private HostHolder hostHolder;
 
+    @LoginRequired
     @RequestMapping(path = "/setting",method = RequestMethod.GET)
     public String getSettingPage(){
         return "/site/setting";
     }
 
+    @LoginRequired
     //上传头像
     @RequestMapping(path = "/upload",method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImage, Model model){
@@ -87,6 +90,7 @@ public class UserController {
         return "redirect:/index";
     }
 
+
     @RequestMapping(path = "/header/{fileName}" , method = RequestMethod.GET)
     public void getHeader(@PathVariable("fileName") String fileName, HttpServletResponse response){
         //服务器存放路径
@@ -116,6 +120,7 @@ public class UserController {
 
     }
 
+    @LoginRequired
     @RequestMapping(path = "/updatePassword",method = RequestMethod.POST)
     public String modifyPassword(String originPassword ,String newPassword,Model model){
         User user = hostHolder.getUser();

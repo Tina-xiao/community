@@ -99,11 +99,13 @@ public class UserController {
         String suffix = fileName.substring(fileName.lastIndexOf("."));
         //响应图片
         response.setContentType("image/" + suffix);
-        try {
+        try (
+                //读取文件得到输入流,在try的括号里创建对象，编译时自动加上finnaly关闭掉
+                FileInputStream fis = new FileInputStream(fileName);
+                ) {
             //输出流由response创建，springmvc自动关闭，但是输入流fis是我们手动创建，需要手动关闭
             OutputStream os = response.getOutputStream();
-            //读取文件得到输入流
-            FileInputStream fis = new FileInputStream(fileName);
+
             //缓冲区1024bytes
             byte[] buffer = new byte[1024];
             int b=0;

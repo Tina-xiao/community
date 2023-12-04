@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX</title>
+</head>
+<body>
+    <p>
+        <input type="button" value="发送" onclick="send();">
+    </p>
+
+    <script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+    <script>
+        function send() {
+            $.post(
+                //web路径
+                "/community/alpha/ajax",
+                {"name":"张三","age":23},
+                //回调函数，匿名，当服务器给浏览器做出响应后，浏览器会调用此方法，data就是服务器返回给浏览器的数据（字符串类型）
+                function(data) {
+                    //打印在浏览器的控制台
+                    console.log(typeof(data));
+                    //{"code":0,"msg":"操作成功!"},由此实现了不刷新页面获取数据，即web路径没变但返回了数据
+                    console.log(data);
+                    //转成json对象
+                    data = $.parseJSON(data);
+                    //object
+                    console.log(typeof(data));
+                    console.log(data.code);
+                    console.log(data.msg);
+                }
+            );
+        }
+    </script>
+</body>
+</html>

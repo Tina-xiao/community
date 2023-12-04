@@ -1,9 +1,10 @@
 package com.nju.community.util;
 
+import com.alibaba.fastjson2.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
 
-import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.UUID;
 
 public class CommunityUtil {
@@ -20,4 +21,27 @@ public class CommunityUtil {
             return null;
         return DigestUtils.md5DigestAsHex(key.getBytes());
     }
+
+    //code编码比如404，msg提示信息，map封装业务数据
+    public static String getJSONString(int code, String msg, Map<String,Object> map)  {
+        JSONObject json = new JSONObject();
+        json.put("code",code);
+        json.put("msg",msg);
+        if(map != null){
+            for(String key:map.keySet()){
+                json.put(key, map.get(key));
+            }
+        }
+        return json.toJSONString();
+    }
+
+    //重载，因为有可能没有msg或者没有map
+    public  static String getJSONString(int code, String msg){
+        return getJSONString(code,msg,null);
+    }
+    public  static String getJSONString(int code){
+        return getJSONString(code,null, null);
+    }
+
+
 }

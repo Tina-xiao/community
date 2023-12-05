@@ -26,7 +26,9 @@ public class Page {
     }
 
     public void setLimit(int limit) {
-        this.limit = limit;
+        if (limit >= 1 && limit <= 100) {
+            this.limit = limit;
+        }
     }
 
     public int getRows() {
@@ -34,7 +36,9 @@ public class Page {
     }
 
     public void setRows(int rows) {
-        this.rows = rows;
+        if (rows >= 0) {
+            this.rows = rows;
+        }
     }
 
     public String getPath() {
@@ -51,7 +55,9 @@ public class Page {
     }
     //获取总页数
     public int getTotal(){
-        return (int)Math.ceil(rows/limit);
+        return (rows - 1) / limit + 1;
+        //return (int)Math.ceil((float)rows/limit);
+
     }
 
     //获取起始显示页码

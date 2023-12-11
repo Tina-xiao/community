@@ -25,17 +25,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // **是指包含多级目录
         registry.addInterceptor(alphaInterceptor)
                 //设置拦截器不拦截的资源
-                .excludePathPatterns("/**/*.css","/**/*.js","/**/*.png","/**/*.jpg","/**/*.jepg")
+                .excludePathPatterns("/**/*.css","/**/*.js","/**/*.png","/**/*.jpg","/**/*.jpeg")
                 //设置拦截路径
                 .addPathPatterns("/register","/login");
 
         registry.addInterceptor(loginTicketInterceptor)
                 //设置拦截器不拦截的资源
-                .excludePathPatterns("/**/*.css","/**/*.js","/**/*.png","/**/*.jpg","/**/*.jepg");
+                .excludePathPatterns("/**/*.css","/**/*.js","/**/*.png","/**/*.jpg","/**/*.jpeg");
 
         registry.addInterceptor(loginRequiredInterceptor)
                 //设置拦截器不拦截静态资源
-                .excludePathPatterns("/**/*.css","/**/*.js","/**/*.png","/**/*.jpg","/**/*.jepg");
+                .excludePathPatterns("/**/*.css","/**/*.js","/**/*.png","/**/*.jpg","/**/*.jpeg");
 
     }
 }

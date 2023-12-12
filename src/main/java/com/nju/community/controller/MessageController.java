@@ -105,6 +105,9 @@ public class MessageController {
     @RequestMapping(path = "/letter/send",method = RequestMethod.POST)
     @ResponseBody
     public String sendLetter(String toName , String content){
+         //验证统一异常处理
+        //Integer.valueOf("abc");
+
         User from = hostHolder.getUser();
         User to = userService.findUserByName(toName);
         if(to == null){
@@ -121,6 +124,7 @@ public class MessageController {
             message.setConversationId(message.getToId()+"_"+message.getFromId());
         }
         messageService.addMessage(message);
+
         return CommunityUtil.getJSONString(0);
     }
 

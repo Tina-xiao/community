@@ -84,8 +84,9 @@ public class MessageController {
 
         //将未读消息设为已读
         List<Integer> NoReadList = getLetterIds(letterList);
-        if(NoReadList!=null)
-        messageService.updateStatus(NoReadList,1);
+        if(!NoReadList.isEmpty()){
+            messageService.updateStatus(NoReadList,1);
+        }
 
         return "/site/letter-detail";
     }

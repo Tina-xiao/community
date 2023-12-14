@@ -22,6 +22,7 @@ public class CommunityUtil {
         return DigestUtils.md5DigestAsHex(key.getBytes());
     }
 
+    //用于异步的时候传递消息给页面，code是错误编码，msg提示信息，map是要返回给浏览器的数据
     //code编码比如404，msg提示信息，map封装业务数据
     public static String getJSONString(int code, String msg, Map<String,Object> map)  {
         JSONObject json = new JSONObject();

@@ -3,8 +3,10 @@ package com.nju.community.controller;
 
 import com.nju.community.annotation.LoginRequired;
 import com.nju.community.entity.User;
+import com.nju.community.service.FollowService;
 import com.nju.community.service.LikeService;
 import com.nju.community.service.UserService;
+import com.nju.community.util.CommunityConstant;
 import com.nju.community.util.CommunityUtil;
 import com.nju.community.util.HostHolder;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +30,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController implements CommunityConstant {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -50,6 +52,9 @@ public class UserController {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private FollowService followService;
 
     @LoginRequired
     @RequestMapping(path = "/setting",method = RequestMethod.GET)
@@ -154,8 +159,26 @@ public class UserController {
         //用户获赞数量
         int likeCount = likeService.findUserLikeCount(userId);
         model.addAttribute("likeCount", likeCount);
+
+        //用户关注其他用户的数量
+        long followeeCount = followService.findFolloweeCount(userId, ENTITY_TYPE_USER);
+        model.addAttribute("followeeCount",followeeCount);
+        //粉丝数量
+        long followerCount =followService.findFollowerCount(ENTITY_TYPE_USER, userId);
+        model.addAttribute("followerCount",followerCount);
+        //当前登录用户对该用户是否已关注
+        boolean hasFollowed = false;
+        User loginUser = hostHolder.getUser();
+        if(loginUser!=null){
+            hasFollowed = followService.hasFollowed(loginUser.getId(), ENTITY_TYPE_USER, userId);
+        }
+        else{
+            throw  new RuntimeException("当前未登录！");
+        }
+        model.addAttribute("hasFollowed",hasFollowed);
         return "/site/profile";
     }
+
 
 
 }

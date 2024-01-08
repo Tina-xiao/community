@@ -9,7 +9,9 @@ public class RedisKeyUtil {
     //A关注B，A是B的follower，B是followee
     private static final String PREFIX_FOLLOWER = "follower";
     private static final String PREFIX_FOLLOWEE = "followee";
-
+    private static final String PREFIX_KAPTCHA = "kaptcha";
+    private static final String PREFIX_TICKET = "ticket";
+    private static final String PREFIX_USER = "user";
     //生成
     // 某个实体的赞的key
     //like:entity:entityType:entityId -> set(userId) 这样既能知道一共获得了几个赞也能知道谁给我点了赞，如果只用String存储没有这个效果
@@ -36,5 +38,17 @@ public class RedisKeyUtil {
         return PREFIX_FOLLOWER + SPLIT +entityType + SPLIT + entityId;
     }
 
+    //登录验证码,重构
+    public static String getKaptchaKey(String owner){
+        return PREFIX_KAPTCHA + SPLIT + owner ;
+    }
+
+    public static String getTicketKey(String ticket){
+        return PREFIX_TICKET + SPLIT + ticket ;
+    }
+
+    public static String getUserKey(int userId){
+        return PREFIX_USER + SPLIT +  userId;
+    }
 
 }

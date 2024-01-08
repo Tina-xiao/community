@@ -4,6 +4,8 @@ import com.nju.community.entity.LoginTicket;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
+//声明一下这个组件不建议使用
+@Deprecated
 public interface LoginTicketMapper {
 
     @Insert({

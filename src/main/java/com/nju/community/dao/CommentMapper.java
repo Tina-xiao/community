@@ -14,4 +14,6 @@ public interface CommentMapper {
     //一共有多少条数据，返回总评论数计算页数
     int selectCountByEntity(int entityType, int entityId);
 
+    
+
 }

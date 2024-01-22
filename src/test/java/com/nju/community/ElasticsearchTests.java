@@ -176,7 +176,7 @@ public class ElasticsearchTests {
         }
 
         //构建Page对象，数据，分页信息，一共多少条数据
-        Page<DiscussPost> page = new PageImpl<>(discussPostList,PageRequest.of(9,10), result.getTotalHits());
+        Page<DiscussPost> page = new PageImpl<>(discussPostList,PageRequest.of(9, 10), result.getTotalHits());
         for (DiscussPost post:page){
             System.out.println(post);
         }

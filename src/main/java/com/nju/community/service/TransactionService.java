@@ -4,6 +4,7 @@ import com.nju.community.dao.DiscussPostMapper;
 import com.nju.community.dao.UserMapper;
 import com.nju.community.entity.DiscussPost;
 import com.nju.community.entity.User;
+import com.nju.community.util.CommunityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
@@ -31,14 +32,23 @@ public class TransactionService {
 
     
     //声明式事务
-    //设置隔离级别和传播机制（如果A调B，且AB都有事务，A是外部事务）
-    //REQUIRED:支持当前事务（外部事物），如果不存在则创建新事务
+    //设置隔离级别(Isolation)和传播机制（如果业务方法A调业务方法B，且AB都有事务机制（有transactional注解），A是外部事务）
+    //REQUIRED:支持当前事务（外部事物），如果不存在则创建新事务，而由于AB两个方法使用了同一个事务，其中任何一个回滚都回同时回滚。
     //REQUIRES_NEW:创建一个新事务，并且暂停当前事务（外部事务）
     //NESTED:如果当前存在事务（外部事务），则嵌套在该事物中执行（有独立的提交和回滚），如果不存在就和REQUIRED一样
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
     public Object save(){
-        //获取用户,先登录
-        User user = userMapper.selectByName("lcx");
+
+        // 新增用户
+        User user = new User();
+        user.setUsername("lcx");
+        user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
+        user.setPassword(CommunityUtil.md5("123" + user.getSalt()));
+        user.setEmail("alpha@qq.com");
+        user.setHeaderUrl("http://image.nowcoder.com/head/99t.png");
+        user.setCreateTime(new Date());
+        userMapper.insertUser(user);
+
 
         //新增帖子
         DiscussPost post = new DiscussPost();
@@ -62,7 +72,16 @@ public class TransactionService {
         return transactionTemplate.execute(new TransactionCallback<Object>() {
             @Override
             public Object doInTransaction(TransactionStatus status) {
-                User user = userMapper.selectByName("lcx");
+
+                // 新增用户
+                User user = new User();
+                user.setUsername("beta");
+                user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
+                user.setPassword(CommunityUtil.md5("123" + user.getSalt()));
+                user.setEmail("beta@qq.com");
+                user.setHeaderUrl("http://image.nowcoder.com/head/999t.png");
+                user.setCreateTime(new Date());
+                userMapper.insertUser(user);
 
                 //新增帖子
                 DiscussPost post = new DiscussPost();

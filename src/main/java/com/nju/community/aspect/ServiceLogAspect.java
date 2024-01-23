@@ -31,6 +31,9 @@ public class ServiceLogAspect {
     public void log(JoinPoint joinPoint){
         //日志格式为:用户[1,2,3,4]在xxx时间访问了[com.nju.community.service.xxx()]
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if(attributes == null) {
+            return;
+        }
         HttpServletRequest request = attributes.getRequest();
         String ip = request.getRemoteHost();
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());

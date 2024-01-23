@@ -6,6 +6,7 @@ import java.util.Map;
 //封装事件对象，用于kafka发送异步消息
 public class Event {
 
+    //主题
     private String topic;
     //事件触发人
     private int userId;
@@ -13,7 +14,7 @@ public class Event {
     private int entityType;
     //被触发的实体id
     private int entityId;
-    //帖子作者
+    //帖子/评论作者，如果回复的是人，这里是空的
     private int entityUserId;
     //对于事件其他的可能的属性，设置一个map来存放，使event有扩展性
     private Map<String, Object> data = new HashMap<>();
@@ -22,8 +23,9 @@ public class Event {
         return topic;
     }
 
-    public void setTopic(String topic) {
+    public Event setTopic(String topic) {
         this.topic = topic;
+        return this;
     }
 
     public int getUserId() {

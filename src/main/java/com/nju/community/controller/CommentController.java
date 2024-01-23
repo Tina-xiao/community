@@ -1,8 +1,12 @@
 package com.nju.community.controller;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.nju.community.entity.Comment;
+import com.nju.community.entity.DiscussPost;
+import com.nju.community.entity.Event;
+import com.nju.community.event.EventProducer;
 import com.nju.community.service.CommentService;
+import com.nju.community.service.DiscussPostService;
+import com.nju.community.util.CommunityConstant;
 import com.nju.community.util.HostHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,13 +18,20 @@ import java.util.Date;
 
 @Controller
 @RequestMapping("/comment")
-public class CommentController {
+public class CommentController implements CommunityConstant {
 
     @Autowired
     private CommentService commentService;
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private DiscussPostService discussPostService;
+
+    @Autowired
+    private EventProducer eventProducer;
+
 
     @RequestMapping(value = "/add/{discussPostId}", method = RequestMethod.POST)
     public String addComment(@PathVariable("discussPostId") int discussPostId, Comment comment) {
@@ -31,6 +42,27 @@ public class CommentController {
         //默认有效
         comment.setStatus(0);
         commentService.addComment(comment);
+
+        //触发评论事件,评论之后发系统通知
+        Event event = new Event()
+                .setTopic(TOPIC_COMMENT)
+                .setUserId(comment.getUserId())
+                .setEntityType(comment.getEntityType())
+                .setEntityId(comment.getEntityId())
+                //不是所有的时间都需要帖子id，所以存data里，这个帖子id用于发布评论后返回帖子页面
+                .setData("discussPostId",discussPostId);
+
+                //如果评论回复的是人，那么entityUserId是空的。
+                if(comment.getEntityType() == ENTITY_TYPE_POST){
+                    DiscussPost target = discussPostService.findDiscussPostById(comment.getEntityId());
+                    event.setEntityUserId(target.getUserId());
+                } else if (comment.getEntityType() == ENTITY_TYPE_COMMENT) {
+                    Comment target = commentService.findCommentById(comment.getEntityId());
+                    event.setEntityUserId(target.getUserId());
+                }
+                //触发事件
+                eventProducer.triggerEvent(event);
+
         return "redirect:/discuss/detail/" + discussPostId;
     }
 

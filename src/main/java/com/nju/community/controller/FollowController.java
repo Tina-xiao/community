@@ -2,8 +2,10 @@ package com.nju.community.controller;
 
 
 import com.nju.community.annotation.LoginRequired;
+import com.nju.community.entity.Event;
 import com.nju.community.entity.Page;
 import com.nju.community.entity.User;
+import com.nju.community.event.EventProducer;
 import com.nju.community.service.FollowService;
 import com.nju.community.service.UserService;
 import com.nju.community.util.CommunityConstant;
@@ -32,6 +34,9 @@ public class FollowController implements CommunityConstant{
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     //关注
     @LoginRequired
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
@@ -42,6 +47,17 @@ public class FollowController implements CommunityConstant{
             throw new RuntimeException("该用户不存在！");
         }
         followService.follow(user.getId(),entityId,entityType);
+        //触发关注事件
+        Event event = new Event()
+                .setTopic(TOPIC_FOLLOW)
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setUserId(user.getId())
+                //目前只能关注人，所以这里的EntityUserId就是entityId
+                .setEntityUserId(entityId);
+        //链接到某人主页，无需postId
+        eventProducer.triggerEvent(event);
+
         return CommunityUtil.getJSONString(0, "已关注");
     }
 

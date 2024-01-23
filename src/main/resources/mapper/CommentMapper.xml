@@ -37,6 +37,8 @@
     </select>
 
     <select id="selectCommentById" resultType="com.nju.community.entity.Comment">
-
+        select <include refid="selectFields"></include>
+        from comment
+        where id = #{id}
     </select>
 </mapper>

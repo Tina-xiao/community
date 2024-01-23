@@ -4,15 +4,12 @@ import com.alibaba.fastjson2.JSONObject;
 import com.nju.community.entity.Event;
 import com.nju.community.entity.Message;
 import com.nju.community.service.MessageService;
-import com.nju.community.service.UserService;
 import com.nju.community.util.CommunityConstant;
-import com.nju.community.util.HostHolder;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -22,14 +19,10 @@ import java.util.Map;
 @Component
 public class EventConsumer implements CommunityConstant {
 
-    @Autowired
-    private KafkaTemplate kafkaTemplate;
 
     @Autowired
     private MessageService messageService;
 
-    @Autowired
-    private UserService userService;
 
 
     //记录日志，防止出现问题
@@ -67,6 +60,7 @@ public class EventConsumer implements CommunityConstant {
             }
         }
         message.setContent(JSONObject.toJSONString(content));
+        System.out.println("111111111111111111111111");
         messageService.addMessage(message);
 
     }

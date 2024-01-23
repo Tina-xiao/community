@@ -8,6 +8,15 @@
         id, user_id, entity_type, entity_id, target_id, content, status, create_time
     </sql>
 
+    <sql id="insertFields">
+        user_id, entity_type, entity_id, target_id, content, status, create_time
+    </sql>
+
+    <insert id="insertComment" keyProperty="id">
+        insert into comment(<include refid="insertFields"/>)
+        values (#{userId},#{entityType},#{entityId},#{targetId},#{content},#{status},#{createTime})
+    </insert>
+
     <select id="selectCommentByEntity" resultType="com.nju.community.entity.Comment">
         select <include refid="selectFields"></include>
         from comment
@@ -25,5 +34,9 @@
         where status = 0
         and entity_type = #{entityType}
         and entity_id = #{entityId}
+    </select>
+
+    <select id="selectCommentById" resultType="com.nju.community.entity.Comment">
+
     </select>
 </mapper>

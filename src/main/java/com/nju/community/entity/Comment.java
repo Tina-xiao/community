@@ -5,8 +5,10 @@ import java.util.Date;
 
 public class Comment {
 
+    //评论有三种，评论帖子，评论评论，回复某人（回复某人时entityType仍是2，表示回复的是评论。但是targetId存回复的用户的id）
     private int id;
     private int userId;
+    //评论的实体类型
     private int entityType;
     private int entityId;
 

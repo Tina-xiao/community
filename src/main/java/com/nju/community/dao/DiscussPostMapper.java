@@ -21,4 +21,6 @@ public interface DiscussPostMapper {
     //返回插入行数
     int insertDiscussPost(DiscussPost discussPost);
 
+    //更新帖子的评论数字段
+    int updateCommentCount(int discussPostId, int commentCount);
 }

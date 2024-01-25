@@ -28,9 +28,7 @@ public class Message {
         this.fromId = fromId;
     }
 
-    public int getToId() {
-        return toId;
-    }
+    public int getToId() { return toId; }
 
     public void setToId(int toId) {
         this.toId = toId;

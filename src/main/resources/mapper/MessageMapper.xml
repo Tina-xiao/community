@@ -91,4 +91,49 @@
         </if>
     </select>
 
+    <select id="selectLatestNotice" resultType="com.nju.community.entity.Message">
+        select <include refid="selectFields"></include>
+        from message
+        where id in (
+            select max(id) from message
+            where status != 2
+            and from_id = 1
+            and to_id = #{userId}
+            and conversation_id = #{topic}
+        )
+    </select>
+
+    <select id="selectNoticCount" resultType="java.lang.Integer">
+        select count(id)
+        from message
+        where status != 2
+        and from_id = 1
+        and to_id = #{userId}
+        and conversation_id = #{topic}
+    </select>
+
+    <select id="selectNoticeUnreadCount" resultType="java.lang.Integer">
+        select count(id)
+        from message
+        where status = 0
+        and from_id = 1
+        and to_id = #{userId}
+--           加if的目的是，使这个方法有通用性，即可以不指定topic把所有系统通知数量查出来
+      <if test="topic!=null">
+        and conversation_id = #{topic}
+      </if>
+    </select>
+
+    <select id="selectNotices" resultType="Message">
+        select <include refid="selectFields"></include>
+        from message
+        where status != 2
+        and from_id = 1
+        and to_id = #{userId}
+        and conversation_id = #{topic}
+        order by create_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+
 </mapper>

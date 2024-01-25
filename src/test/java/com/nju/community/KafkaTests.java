@@ -20,7 +20,7 @@ public class KafkaTests {
     @Autowired
     private KafkaProducer producer ;
 
-    //运行前要先运行kafka！
+    //运行前要先运行kafka！如果kafka出现broker warn就把log目录删掉重启
     @Test
     public void testKafka() {
         producer.sendMessage("test","hello world");

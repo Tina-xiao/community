@@ -1,9 +1,7 @@
 package com.nju.community.controller;
 
-import com.nju.community.entity.Comment;
-import com.nju.community.entity.DiscussPost;
-import com.nju.community.entity.Page;
-import com.nju.community.entity.User;
+import com.nju.community.entity.*;
+import com.nju.community.event.EventProducer;
 import com.nju.community.service.CommentService;
 import com.nju.community.service.DiscussPostService;
 import com.nju.community.service.LikeService;
@@ -41,6 +39,9 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     //返回字符串不是网页-
     @ResponseBody
@@ -58,7 +59,12 @@ public class DiscussPostController implements CommunityConstant {
         discussPostService.addDiscussPost(post);
 
         //触发发帖事件
-
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(post.getId())
+                .setUserId(user.getId());
+        eventProducer.triggerEvent(event);
 
         // 报错的情况,将来统一处理
         return CommunityUtil.getJSONString(0, "发布成功!");

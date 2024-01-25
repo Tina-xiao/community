@@ -27,8 +27,12 @@ public interface CommunityConstant {
     String TOPIC_FOLLOW = "follow";
     //主题:评论
     String TOPIC_COMMENT = "comment";
+    //主题:发帖
+    String TOPIC_PUBLISH = "publish";
     //系统的id
     int SYSTEM_USER_ID = 1;
-    //主题:发帖
+
+
+
 
 }

@@ -3,7 +3,7 @@ package com.nju.community.entity;
 //封装分页相关信息
 
 public class Page {
-    //当前页码
+    //当前页码,这里的页码是从1开始，若想从0开始，调用时减一即可
     private int current = 1;
     //显示上线
     private int limit = 10;

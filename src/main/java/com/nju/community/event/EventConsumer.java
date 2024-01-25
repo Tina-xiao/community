@@ -1,8 +1,11 @@
 package com.nju.community.event;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.nju.community.entity.DiscussPost;
 import com.nju.community.entity.Event;
 import com.nju.community.entity.Message;
+import com.nju.community.service.DiscussPostService;
+import com.nju.community.service.ElasticsearchService;
 import com.nju.community.service.MessageService;
 import com.nju.community.util.CommunityConstant;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -23,6 +26,11 @@ public class EventConsumer implements CommunityConstant {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private DiscussPostService discussPostService;
+
+    @Autowired
+    private ElasticsearchService elasticsearchService;
 
 
     //记录日志，防止出现问题
@@ -60,8 +68,29 @@ public class EventConsumer implements CommunityConstant {
             }
         }
         message.setContent(JSONObject.toJSONString(content));
-        System.out.println("111111111111111111111111");
         messageService.addMessage(message);
+    }
+
+    //消费发帖事件，一发帖就将发帖event存到elasticsearch
+    @KafkaListener(topics = TOPIC_PUBLISH)
+    public void handlePublishMessage(ConsumerRecord record) {
+        if(record == null || record.value() == null) {
+            logger.error("消息的内容为空！");
+            return;
+        }
+
+        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+        if(event == null){
+            logger.error("消息格式错误！");
+            return;
+        }
+
+        //从事件的消息查到帖子id，存到elasticsearch
+        DiscussPost post = discussPostService.findDiscussPostById(event.getEntityId());
+        elasticsearchService.saveDiscussPost(post);
+
 
     }
+
+
 }

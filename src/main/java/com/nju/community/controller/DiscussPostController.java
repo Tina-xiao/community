@@ -51,6 +51,8 @@ public class DiscussPostController implements CommunityConstant {
             return CommunityUtil.getJSONString(403, "你还没有登录哦!");
         }
 
+        System.out.println("1111111111");
+
         DiscussPost post = new DiscussPost();
         post.setUserId(user.getId());
         post.setTitle(title);
@@ -65,6 +67,7 @@ public class DiscussPostController implements CommunityConstant {
                 .setEntityId(post.getId())
                 .setUserId(user.getId());
         eventProducer.triggerEvent(event);
+        System.out.println("2222222222");
 
         // 报错的情况,将来统一处理
         return CommunityUtil.getJSONString(0, "发布成功!");
@@ -154,6 +157,60 @@ public class DiscussPostController implements CommunityConstant {
         model.addAttribute("comments",commentVoList);
         System.out.println(model.getAttribute("comments"));
         return "/site/discuss-detail";
+    }
+
+    //置顶
+    @RequestMapping(path = "/top", method = RequestMethod.POST)
+    @ResponseBody
+    public String setTop(int id) {
+        //type为1是置顶
+        discussPostService.updateType(id, 1);
+
+        //触发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id)
+                .setUserId(hostHolder.getUser().getId());
+        eventProducer.triggerEvent(event);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+    //加精
+    @RequestMapping(path = "/wonderful", method = RequestMethod.POST)
+    @ResponseBody
+    public String setWonderful(int id) {
+        //status为1是精华，0是正常，2是拉黑
+        discussPostService.updateStatus(id, 1);
+
+        //触发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id)
+                .setUserId(hostHolder.getUser().getId());
+        eventProducer.triggerEvent(event);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+    //删除
+    @RequestMapping(path = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String setDelete(int id) {
+        //status为1是精华，0是正常，2是拉黑
+        discussPostService.updateStatus(id, 2);
+
+        //触发删帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_DELETE)
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id)
+                .setUserId(hostHolder.getUser().getId());
+        eventProducer.triggerEvent(event);
+
+        return CommunityUtil.getJSONString(0);
     }
 
 }

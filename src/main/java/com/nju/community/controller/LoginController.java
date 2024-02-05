@@ -8,6 +8,7 @@ import com.nju.community.util.CommunityConstant;
 import com.nju.community.util.CommunityUtil;
 import com.nju.community.util.RedisKeyUtil;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
@@ -15,9 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,9 @@ public class LoginController implements CommunityConstant {
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
+
+    @Autowired
+    private SecurityContextLogoutHandler securityContextLogoutHandler;
 
     //访问注册页面
     @RequestMapping(value = "/register",method = RequestMethod.GET)
@@ -217,15 +221,17 @@ public class LoginController implements CommunityConstant {
         }
     }
 
-    @RequestMapping(path = "/logout",method = RequestMethod.GET)
-    public String logout(@CookieValue("ticket") String ticket){
-        userService.logout(ticket);
+
+    @GetMapping("/logout")
+    public String logout(@CookieValue("ticket") String ticket, HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         //退出时认证信息也应该清除
-        SecurityContextHolder.clearContext();
+        userService.logout(ticket);
+        // 加入下面这一句
+        securityContextLogoutHandler.logout(request, response, authentication);
+       // System.out.println("11111111111");
         //重定向默认是get请求
         return "redirect:/login";
     }
-
 
 
 }

@@ -272,28 +272,10 @@ public class UserService implements CommunityConstant {
                 }
             }
         });
-        return list;
-    }
+//        for(GrantedAuthority l:list){
+//            System.out.println("用户权限信息： "+l.getAuthority().toString());
+//        }
 
-
-    public Collection<? extends GrantedAuthority> getAuthorities1(int userId) {//查询用户权限的方法，希望获得userId用户的权限
-        User user = this.findUserById(userId);
-
-        List<GrantedAuthority> list = new ArrayList<>();//什么时候获得用户权限，并且把用户权限的结论tocken存到context里，之前也做过显示用户登录信息的功能，登录成功以后会生成一个ticket，存到用户里，用户每次访问服务器，服务器会验证此ticket，看此凭证对不对，有没有过期
-        list.add(new GrantedAuthority() {
-
-            @Override
-            public String getAuthority() {
-                switch (user.getType()) {
-                    case 1:
-                        return AUTHORITY_ADMIN;
-                    case 2:
-                        return AUTHORITY_MODERATOR;
-                    default:
-                        return AUTHORITY_USER;
-                }
-            }
-        });
         return list;
     }
 

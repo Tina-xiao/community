@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,6 +30,10 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
 
     @Autowired
     private HostHolder hostHolder;
+
+    // 持久化权限，解决权限不生效问题
+    @Autowired
+    private SecurityContextRepository securityContextRepository;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -49,9 +54,8 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
                         user, user.getPassword(), userService.getAuthorities(user.getId()));
                 //存入Context
                 SecurityContextHolder.setContext(new SecurityContextImpl(authentication));
-
-//                System.out.println("用户认证信息！"+authentication.toString());
-//                System.out.println("context3  "+SecurityContextHolder.getContext());
+                securityContextRepository.saveContext(SecurityContextHolder.getContext(), request, response);
+               // System.out.println("用户认证信息！"+authentication.toString());
             }
         }
         return true;

@@ -9,13 +9,13 @@ function publish() {
 	// 	<meta name="_csrf_header" th:content="${_csrf.headerName}">
 	//发送AJAX请求之前，将CSRF令牌设置到请求的消息头中
 	//获取name=‘_csrf’（名字固定叫这个）的meta属性值
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-	//对请求参数做设置，xhr是发送异步请求的核心对象
-	$(document).ajaxSend(function (e, xhr, options) {
-		//key是header，值是token
-		xhr.setRequestHeader(header,token);
-	});
+	// var token = $("meta[name='_csrf']").attr("content");
+	// var header = $("meta[name='_csrf_header']").attr("content");
+	// //对请求参数做设置，xhr是发送异步请求的核心对象
+	// $(document).ajaxSend(function (e, xhr, options) {
+	// 	//key是header，值是token
+	// 	xhr.setRequestHeader(header,token);
+	// });
 
 
 

@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Deprecated
 //表示注解可以写在方法之上
 @Target(ElementType.METHOD)
 //程序运行时有效

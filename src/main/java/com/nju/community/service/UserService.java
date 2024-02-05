@@ -12,15 +12,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -199,7 +197,7 @@ public class UserService implements CommunityConstant {
     }
 
     //通过凭证找到对应的登录记录
-    public LoginTicket findLoginticket(String ticket){
+    public LoginTicket findLoginTicket(String ticket){
         String ticketKey = RedisKeyUtil.getTicketKey(ticket);
         return (LoginTicket) redisTemplate.opsForValue().get(ticketKey);
     }
@@ -255,5 +253,49 @@ public class UserService implements CommunityConstant {
         //直接把key以及存储的value删掉
         redisTemplate.delete(userKey);
     }
+
+    //获得用户权限,返回用户权限list
+    public Collection<? extends GrantedAuthority> getAuthorities(int userId) {
+        User user = this.findUserById(userId);
+
+        List<GrantedAuthority> list = new ArrayList<>();
+        list.add(new GrantedAuthority() {
+            @Override
+            public String getAuthority() {
+                switch (user.getType()) {
+                    case 1:
+                        return AUTHORITY_ADMIN;
+                    case 2:
+                        return AUTHORITY_MODERATOR;
+                    default:
+                        return AUTHORITY_USER;
+                }
+            }
+        });
+        return list;
+    }
+
+
+    public Collection<? extends GrantedAuthority> getAuthorities1(int userId) {//查询用户权限的方法，希望获得userId用户的权限
+        User user = this.findUserById(userId);
+
+        List<GrantedAuthority> list = new ArrayList<>();//什么时候获得用户权限，并且把用户权限的结论tocken存到context里，之前也做过显示用户登录信息的功能，登录成功以后会生成一个ticket，存到用户里，用户每次访问服务器，服务器会验证此ticket，看此凭证对不对，有没有过期
+        list.add(new GrantedAuthority() {
+
+            @Override
+            public String getAuthority() {
+                switch (user.getType()) {
+                    case 1:
+                        return AUTHORITY_ADMIN;
+                    case 2:
+                        return AUTHORITY_MODERATOR;
+                    default:
+                        return AUTHORITY_USER;
+                }
+            }
+        });
+        return list;
+    }
+
 
 }

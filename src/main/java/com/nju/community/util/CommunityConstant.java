@@ -31,8 +31,12 @@ public interface CommunityConstant {
     String TOPIC_PUBLISH = "publish";
     //系统的id
     int SYSTEM_USER_ID = 1;
-
-
+    //权限：用户
+    String AUTHORITY_USER = "user";
+    //权限:管理员
+    String AUTHORITY_ADMIN = "admin";
+    //权限:版主,主持人
+    String AUTHORITY_MODERATOR = "moderator";
 
 
 }

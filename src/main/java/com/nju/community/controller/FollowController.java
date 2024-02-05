@@ -1,7 +1,6 @@
 package com.nju.community.controller;
 
 
-import com.nju.community.annotation.LoginRequired;
 import com.nju.community.entity.Event;
 import com.nju.community.entity.Page;
 import com.nju.community.entity.User;
@@ -38,7 +37,6 @@ public class FollowController implements CommunityConstant{
     private EventProducer eventProducer;
 
     //关注
-    @LoginRequired
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityId, int entityType) {
@@ -62,7 +60,6 @@ public class FollowController implements CommunityConstant{
     }
 
     //取消关注
-    @LoginRequired
     @RequestMapping(path = "/unfollow", method = RequestMethod.POST)
     @ResponseBody
     public String unfollow(int entityId, int entityType) {

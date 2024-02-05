@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+@Deprecated
 @Component
 public class AlphaInterceptor implements HandlerInterceptor {
 

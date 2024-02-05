@@ -12,6 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.lang.reflect.Method;
 
+@Deprecated
 @Component
 public class LoginRequiredInterceptor implements HandlerInterceptor {
 
@@ -23,6 +24,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
         //只拦截被@LoginRequired标注的方法,不拦截其他资源，包括静态资源,handler是被拦截的对象
         //instanceof测试它左边的对象是否是它右边的类的实例
         if(handler instanceof HandlerMethod){
+            System.out.println("拦截到！");
             //转型
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             //获取拦截到的method对象

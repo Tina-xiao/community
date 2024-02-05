@@ -1,6 +1,5 @@
 package com.nju.community.controller;
 
-import com.nju.community.annotation.LoginRequired;
 import com.nju.community.entity.Event;
 import com.nju.community.entity.User;
 import com.nju.community.event.EventProducer;
@@ -30,7 +29,6 @@ public class LikeController implements CommunityConstant {
     private EventProducer eventProducer;
 
 
-    @LoginRequired
     @RequestMapping(path="/like", method = RequestMethod.POST)
     @ResponseBody
     public String like(int entityType, int entityId, int entityUserId, int discussPostId) {

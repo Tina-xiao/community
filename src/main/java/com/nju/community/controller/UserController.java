@@ -56,13 +56,12 @@ public class UserController implements CommunityConstant {
     @Autowired
     private FollowService followService;
 
-    @LoginRequired
+
     @RequestMapping(path = "/setting",method = RequestMethod.GET)
     public String getSettingPage(){
         return "/site/setting";
     }
 
-    @LoginRequired
     //上传头像
     @RequestMapping(path = "/upload",method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImage, Model model){
@@ -131,7 +130,7 @@ public class UserController implements CommunityConstant {
 
     }
 
-    @LoginRequired
+    //@LoginRequired
     @RequestMapping(path = "/updatePassword",method = RequestMethod.POST)
     public String modifyPassword(String originPassword ,String newPassword,Model model){
         User user = hostHolder.getUser();

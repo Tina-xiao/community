@@ -1,4 +1,4 @@
-package com.nju.community.controller.advice;
+package com.nju.community.controller.interceptor.advice;
 
 import com.nju.community.util.CommunityUtil;
 import jakarta.servlet.http.HttpServletRequest;

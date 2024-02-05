@@ -90,4 +90,8 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
+<!--    kafka-->
+    <logger name="org.apache.kafka" level="off" />
+
+
 </configuration>

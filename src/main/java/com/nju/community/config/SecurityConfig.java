@@ -85,6 +85,7 @@ public class SecurityConfig implements CommunityConstant {
                                 AUTHORITY_MODERATOR
                         )
                         .requestMatchers(
+                                "/data/**",
                                 "/discuss/delete",
                                 "/data/**",
                                 "/actuator/**"

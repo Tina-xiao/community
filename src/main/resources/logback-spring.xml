@@ -92,6 +92,8 @@
 
 <!--    kafka-->
     <logger name="org.apache.kafka" level="off" />
+<!--   关闭tomcat持久化-->
+    <Manager className="org.apache.catalina.session.PersistentManager" saveOnRestart="false"/>
 
 
 </configuration>

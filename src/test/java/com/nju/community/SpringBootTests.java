@@ -11,11 +11,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
 
+//单元测试
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = CommunityApplication.class)
 public class SpringBootTests {
 
+    //对整个类做测试，就是跑一遍该test类内所有的@Test方法
+    //也可以单独跑一个方法
     @Autowired
     private DiscussPostService discussPostService;
 
@@ -49,7 +52,8 @@ public class SpringBootTests {
     @After
     public void after() {
         System.out.println("after");
-
+        //删除测试数据
+        discussPostService.updateStatus(data.getId(),2);
 
     }
 
@@ -61,6 +65,17 @@ public class SpringBootTests {
     @Test
     public void test2() {
         System.out.println("test2");
+    }
+
+    @Test
+    public void testFindById() {
+        //测试findById功能
+        DiscussPost discussPost = discussPostService.findDiscussPostById(data.getId());
+        //判断是否非空
+        Assert.assertNotNull(discussPost);
+        //判断查到的数据和数据库中存的是否一致
+        Assert.assertEquals(data.getTitle(), discussPost.getTitle());
+        Assert.assertEquals(data.getContent(),discussPost.getContent());
     }
 
 }
